@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { MENU, BUSINESS, type MenuItem } from "@/lib/menu";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { MENU, BUSINESS, type MenuItem } from "../lib/menu";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 import { Minus, Plus, ShoppingBag, X, MessageCircle } from "lucide-react";
 
 type Cart = Record<string, number>;
@@ -14,8 +14,9 @@ export function OrderSection() {
   const [open, setOpen] = useState(false);
 
   const items = useMemo(
-    () => MENU.map((m) => ({ ...m, qty: cart[m.id] || 0 })).filter((m) => m.qty > 0),
-    [cart],
+    () =>
+      MENU.map((m) => ({ ...m, qty: cart[m.id] || 0 })).filter((m) => m.qty > 0),
+    [cart]
   );
   const total = items.reduce((s, i) => s + i.price * i.qty, 0);
   const count = items.reduce((s, i) => s + i.qty, 0);
@@ -49,14 +50,12 @@ export function OrderSection() {
   const categories = ["Mains", "Snacks", "Desserts"] as const;
 
   return (
-    <section id="menu" className="relative py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-5">
-        <div className="mb-12 max-w-2xl">
-          <p className="text-sm uppercase tracking-[0.2em] text-[var(--spice)]">The Menu</p>
-          <h2 className="mt-3 text-4xl md:text-5xl font-semibold text-foreground">
-            Today's freshly prepared selection
-          </h2>
-          <p className="mt-4 text-muted-foreground">
+    <section id="menu" style={{ position: 'relative', padding: '5rem 0' }}>
+      <div style={{ maxWidth: 1024, margin: '0 auto', padding: '0 1rem' }}>
+        <div style={{ marginBottom: '2rem', maxWidth: 600 }}>
+          <p style={{ textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--spice)' }}>The Menu</p>
+          <h2 style={{ marginTop: '0.5rem', fontSize: '2rem', fontWeight: 600 }}>Today's freshly prepared selection</h2>
+          <p style={{ marginTop: '0.75rem', color: 'var(--muted-foreground)' }}>
             Tap to add items to your basket, then send your order straight to our WhatsApp.
           </p>
         </div>
@@ -65,9 +64,9 @@ export function OrderSection() {
           const list = MENU.filter((m) => m.category === cat);
           if (!list.length) return null;
           return (
-            <div key={cat} className="mb-14">
-              <h3 className="mb-6 text-2xl font-medium text-foreground/80">{cat}</h3>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            <div key={cat} style={{ marginBottom: '3.5rem' }}>
+              <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', fontWeight: 500, color: 'rgba(0,0,0,0.8)' }}>{cat}</h3>
+              <div style={{ display: 'grid', gap: '1.25rem', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
                 {list.map((item) => (
                   <MenuCard
                     key={item.id}
@@ -87,11 +86,25 @@ export function OrderSection() {
       {count > 0 && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-3 rounded-full bg-primary px-5 py-4 text-primary-foreground shadow-2xl shadow-primary/30 transition-transform hover:scale-105"
+          style={{
+            position: 'fixed',
+            right: 24,
+            bottom: 24,
+            zIndex: 40,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            borderRadius: 9999,
+            backgroundColor: '#3b82f6',
+            padding: '12px 18px',
+            color: '#fff',
+            boxShadow: '0 10px 30px rgba(59,130,246,0.15)',
+            cursor: 'pointer'
+          }}
         >
-          <ShoppingBag className="h-5 w-5" />
-          <span className="font-medium">{count} item{count > 1 ? "s" : ""}</span>
-          <span className="rounded-full bg-[var(--saffron)] px-3 py-1 text-sm font-semibold text-[var(--ink)]">
+          <ShoppingBag style={{ height: 20, width: 20 }} />
+          <span style={{ fontWeight: 500 }}>{count} item{count > 1 ? 's' : ''}</span>
+          <span style={{ borderRadius: 9999, background: 'var(--saffron)', padding: '6px 10px', fontWeight: 600, color: 'var(--ink)' }}>
             R{total}
           </span>
         </button>
@@ -99,55 +112,48 @@ export function OrderSection() {
 
       {/* Cart drawer */}
       {open && (
-        <div className="fixed inset-0 z-50 flex items-end md:items-center md:justify-center bg-black/50 backdrop-blur-sm" onClick={() => setOpen(false)}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }} onClick={() => setOpen(false)}>
           <div
-            className="w-full max-w-lg rounded-t-3xl md:rounded-3xl bg-card p-6 md:p-8 shadow-2xl"
+            style={{ width: '100%', maxWidth: 520, borderRadius: 24, background: 'var(--card)', padding: 20, boxShadow: '0 20px 40px rgba(0,0,0,0.12)' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-semibold">Your Order</h3>
-              <button onClick={() => setOpen(false)} className="rounded-full p-2 hover:bg-muted">
-                <X className="h-5 w-5" />
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <h3 style={{ fontSize: 20, fontWeight: 600 }}>Your Order</h3>
+              <button onClick={() => setOpen(false)} style={{ borderRadius: 9999, padding: 8, background: 'transparent' }}>
+                <X style={{ height: 18, width: 18 }} />
               </button>
             </div>
 
             {items.length === 0 ? (
-              <p className="text-muted-foreground py-8 text-center">Your basket is empty.</p>
+              <p style={{ color: 'var(--muted-foreground)', padding: '2rem 0', textAlign: 'center' }}>Your basket is empty.</p>
             ) : (
               <>
-                <div className="space-y-3 max-h-64 overflow-y-auto mb-6">
+                <div style={{ maxHeight: 260, overflowY: 'auto', marginBottom: 16 }}>
                   {items.map((i) => (
-                    <div key={i.id} className="flex items-center gap-3 text-sm">
-                      <span className="font-medium w-6">{i.qty}×</span>
-                      <span className="flex-1">{i.name}</span>
-                      <span className="font-semibold">R{i.price * i.qty}</span>
+                    <div key={i.id} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 14, padding: '8px 0' }}>
+                      <span style={{ fontWeight: 600, width: 28 }}>{i.qty}×</span>
+                      <span style={{ flex: 1 }}>{i.name}</span>
+                      <span style={{ fontWeight: 600 }}>R{(i.price * i.qty).toFixed(2)}</span>
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between border-t border-border pt-4 mb-6 text-lg font-semibold">
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid var(--border)', paddingTop: 12, marginBottom: 16, fontSize: 16, fontWeight: 600 }}>
                   <span>Total</span>
                   <span>R{total}</span>
                 </div>
-                <div className="space-y-3 mb-6">
-                  <Input
-                    placeholder="Your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <Textarea
-                    placeholder="Pickup time, allergies, special requests…"
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    rows={3}
-                  />
+
+                <div style={{ display: 'grid', gap: 8, marginBottom: 12 }}>
+                  <Input placeholder="Your name" value={name} onChange={(e) => setName(e.target.value)} />
+                  <Textarea placeholder="Pickup time, allergies, special requests…" value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} />
                 </div>
-                <Button onClick={sendOrder} size="lg" className="w-full bg-[#25D366] hover:bg-[#1ebe57] text-white">
-                  <MessageCircle className="mr-2 h-5 w-5" />
+
+                <Button onClick={sendOrder} size="lg" style={{ width: '100%', backgroundColor: '#25D366', color: '#fff', fontWeight: 700 }}>
+                  <MessageCircle style={{ marginRight: 8, height: 18, width: 18 }} />
                   Send Order via WhatsApp
                 </Button>
-                <p className="text-xs text-muted-foreground text-center mt-3">
-                  Opens WhatsApp with your order pre-filled. We'll confirm shortly.
-                </p>
+
+                <p style={{ fontSize: 12, color: 'var(--muted-foreground)', textAlign: 'center', marginTop: 10 }}>Opens WhatsApp with your order pre-filled. We'll confirm shortly.</p>
               </>
             )}
           </div>
@@ -169,35 +175,31 @@ function MenuCard({
   onDec: () => void;
 }) {
   return (
-    <div className="group flex gap-4 rounded-2xl bg-card p-4 border border-border/60 transition-all hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-0.5">
-      <img
-        src={item.image}
-        alt={item.name}
-        loading="lazy"
-        className="h-28 w-28 md:h-32 md:w-32 rounded-xl object-cover flex-shrink-0"
-      />
-      <div className="flex flex-1 flex-col">
-        <div className="flex items-start justify-between gap-2">
-          <h4 className="font-semibold text-lg leading-tight">{item.name}</h4>
+    <div style={{ display: 'flex', gap: 12, borderRadius: 16, background: 'var(--card)', padding: 12, border: '1px solid rgba(0,0,0,0.06)' }}>
+      <img src={item.image} alt={item.name} loading="lazy" style={{ height: 112, width: 112, borderRadius: 12, objectFit: 'cover', flexShrink: 0 }} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+          <h4 style={{ fontWeight: 600, fontSize: 16, margin: 0 }}>{item.name}</h4>
         </div>
-        <p className="mt-1 text-sm text-muted-foreground line-clamp-2 flex-1">{item.description}</p>
-        <div className="mt-3 flex items-center justify-between">
+        <p style={{ marginTop: 6, color: 'var(--muted-foreground)', fontSize: 13 }}>{item.description}</p>
+        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <span className="text-lg font-semibold text-[var(--spice)]">R{item.price}</span>
-            {item.unit && <span className="text-xs text-muted-foreground ml-1">{item.unit}</span>}
+            <span style={{ fontSize: 16, fontWeight: 600, color: 'var(--spice)' }}>R{item.price}</span>
+            {item.unit && <span style={{ marginLeft: 8, color: 'var(--muted-foreground)', fontSize: 12 }}>{item.unit}</span>}
           </div>
           {qty === 0 ? (
-            <Button size="sm" onClick={onInc} className="rounded-full">
-              <Plus className="h-4 w-4 mr-1" /> Add
+            <Button size="sm" onClick={onInc} style={{ borderRadius: 9999 }}> 
+              <Plus style={{ height: 14, width: 14, marginRight: 6 }} />
+              Add
             </Button>
           ) : (
-            <div className="flex items-center gap-1 rounded-full bg-primary text-primary-foreground">
-              <button onClick={onDec} className="p-2 hover:opacity-80">
-                <Minus className="h-4 w-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, borderRadius: 9999, padding: '6px 8px', background: '#efefef' }}>
+              <button onClick={onDec} style={{ padding: 8, borderRadius: 8, background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                <Minus style={{ height: 14, width: 14 }} />
               </button>
-              <span className="w-6 text-center font-medium">{qty}</span>
-              <button onClick={onInc} className="p-2 hover:opacity-80">
-                <Plus className="h-4 w-4" />
+              <span style={{ width: 28, textAlign: 'center', fontWeight: 600 }}>{qty}</span>
+              <button onClick={onInc} style={{ padding: 8, borderRadius: 8, background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                <Plus style={{ height: 14, width: 14 }} />
               </button>
             </div>
           )}
